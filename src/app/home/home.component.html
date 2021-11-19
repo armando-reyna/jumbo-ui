@@ -1,0 +1,66 @@
+<h1>Home</h1>
+
+<h2>Welcome!</h2>
+<p>The system will try to find the closest Jumbo Stores for you, please allow location services in your browser.</p>
+<p>You can also search based on a position:</p>
+
+<form [formGroup]="positionForm" #ngForm="ngForm" (ngSubmit)="doSearch()">
+
+  <div>
+    <mat-form-field class="example-full-width" appearance="fill">
+      <mat-label>Enter latitude</mat-label>
+      <input matInput placeholder="latitude" type="number" formControlName="latitude">
+      <span class="validation-errors">
+        <ng-container *ngFor="let validation of loginValidationMessages.latitude">
+          <p class="error-message" *ngIf="showErrorUntouched(positionForm, ngForm, validation, 'latitude')">
+            {{ validation.message }}
+          </p>
+        </ng-container>
+      </span>
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width" appearance="fill">
+      <mat-label>Enter longitude</mat-label>
+      <input matInput placeholder="longitude" type="number" formControlName="longitude">
+      <span class="validation-errors">
+        <ng-container *ngFor="let validation of loginValidationMessages.longitude">
+          <p class="error-message" *ngIf="showErrorUntouched(positionForm, ngForm, validation, 'longitude')">
+            {{ validation.message }}
+          </p>
+        </ng-container>
+      </span>
+    </mat-form-field>
+
+  </div>
+
+  <mat-spinner *ngIf="!locationLoaded || loading"></mat-spinner>
+  <p class="mat-error" *ngIf="locationLoaded && locationError">The system was unable to use your location, try enabling location services in your browser.</p>
+  <button *ngIf="locationLoaded" mat-raised-button color="primary">Search</button>
+
+<!--  <div class="stores" *ngIf="stores">-->
+  <div class="stores">
+    <mat-card class="example-card" *ngFor="let store of stores">
+      <mat-card-header>
+        <div mat-card-avatar>
+          <mat-icon>location_on</mat-icon>
+        </div>
+        <div mat-card-avatar>
+          <mat-icon>store</mat-icon>
+        </div>
+        <mat-card-title>{{ store.addressName }} - {{store.locationType}}</mat-card-title>
+        <mat-card-subtitle>Distance: {{ store.distance }}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <p>City: {{store.city}}</p>
+        <p>Street: {{store.street}} {{store.street2}} {{store.street3}}</p>
+        <p>Postal Code: {{store.postalCode}}</p>
+        <p>Opens at: {{store.todayOpen}}</p>
+        <p>Closes at: {{store.todayClose}}</p>
+      </mat-card-content>
+      <mat-card-actions>
+        <a href="https://www.google.com/maps/search/?api=1&query={{store.latitude}}%2C{{store.longitude}}" target="_blank" mat-button>Open in Google Maps <mat-icon>public</mat-icon> </a>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+
+</form>
